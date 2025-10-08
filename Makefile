@@ -41,3 +41,16 @@ clean:
 
 rebuild: clean all
 
+run: all
+	@echo Running Compressor...
+	@$(TARGET)
+
+help:
+	@echo.
+	@echo Usage:
+	@echo   make            - Build the project
+	@echo   make run        - Build and run
+	@echo   make clean      - Delete compiled files
+	@echo   make rebuild    - Clean + rebuild
+	@echo   make help       - Show this help
+	@echo.
