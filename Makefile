@@ -1,56 +1,33 @@
+# Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Iinclude -Wall -O2
 
-SRC_DIR = src
-INC_DIR = include
-BUILD_DIR = build
+# Source files
+SRC = src\main.c src\huffman.c src\txt.c src\img.c src\stats.c
+OBJ = $(SRC:.c=.o)
 
-SRCS = $(SRC_DIR)/main.c \
-       $(SRC_DIR)/huffman.c \
-       $(SRC_DIR)/txt.c \
-       $(SRC_DIR)/img.c \
-       $(SRC_DIR)/stats.c  
+# Target executable
+TARGET = CompShare.exe
 
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+# Backend folder
+BACKEND_DIR = backend
 
-TARGET = $(BUILD_DIR)/compressor.exe
+all: $(TARGET) copy_to_backend
 
+# Build executable
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
 
-
-all: setup $(TARGET)
-
-setup:
-	@if not exist "$(BUILD_DIR)" mkdir "$(BUILD_DIR)"
-	@echo Build directory ready.
-
-$(TARGET): $(OBJS)
-	@echo Linking all modules...
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
-	@echo Build successful! Executable created: $(TARGET)
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@echo Compiling $< ...
+# Compile .c to .o
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Copy executable to backend folder
+copy_to_backend: $(TARGET)
+	if not exist $(BACKEND_DIR) mkdir $(BACKEND_DIR)
+	copy $(TARGET) $(BACKEND_DIR)\$(TARGET)
+	@echo Executable copied to $(BACKEND_DIR)\$(TARGET)
 
+# Clean object files and executable
 clean:
-	@echo Cleaning build files...
-	@if exist "$(BUILD_DIR)\*.o" del /Q "$(BUILD_DIR)\*.o"
-	@if exist "$(TARGET)" del /Q "$(TARGET)"
-	@echo Clean complete.
-
-rebuild: clean all
-
-run: all
-	@echo Running Compressor...
-	@$(TARGET)
-
-help:
-	@echo.
-	@echo Usage:
-	@echo   make            - Build the project
-	@echo   make run        - Build and run
-	@echo   make clean      - Delete compiled files
-	@echo   make rebuild    - Clean + rebuild
-	@echo   make help       - Show this help
-	@echo.
+	del /Q $(OBJ) $(TARGET)
