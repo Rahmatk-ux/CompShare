@@ -113,10 +113,3 @@ mingw32-make
 This compiles `src/main.c`, `src/huffman.c`, `src/txt.c`, `src/img.c`, and `src/stats.c` into `CompShare.exe`, then automatically copies it into `backend/` so Flask's `subprocess` calls can find it. Run `mingw32-make clean` to remove build artifacts.
 
 > Built and tested on Windows with MinGW. The Makefile uses Windows-specific commands (`copy`, `del /Q`), so it will need adjusting (`cp`, `rm`) to run on Linux/Mac.
-
-## Future Enhancements
-
-- User accounts and file history instead of anonymous share codes
-- Support for additional file types beyond text and BMP
-- Deployment to a live host (Render/Railway for Flask, Vercel for React)
-- Expiry/auto-cleanup for old compressed files
